@@ -16,13 +16,14 @@
 	define( 'FS__API_PUBLIC_KEY', $_ENV['PUBLIC_KEY'] );
 	define( 'FS__API_SECRET_KEY', $_ENV['SECRET_KEY'] );
 
+	    
+    print_r(FS__API_PUBLIC_KEY, FS__API_SECRET_KEY, FS__API_DEV_ID, $_ENV['PLUGIN_SLUG']);
+
     echo "\n- Deploy in progress on Freemius\n";
 
     try {
         // Init SDK.
         $api = new Freemius_Api(FS__API_SCOPE, FS__API_DEV_ID, FS__API_PUBLIC_KEY, FS__API_SECRET_KEY, $sandbox);
-	    
-	print_r(FS__API_PUBLIC_KEY, FS__API_SECRET_KEY);
 
         if (!is_object($api)) {
             print_r($deploy);
