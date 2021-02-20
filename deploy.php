@@ -43,7 +43,14 @@
                 'add_contributor' => false,
                 'plugin_id' => $_ENV['PLUGIN_ID']
             ), array(
-                'file' => $file_name
+                'file' =>  './' . $file_name
+            ));
+		
+	    var_dump('plugins/'.$_ENV['PLUGIN_ID'].'/tags.json', 'POST', array(
+                'add_contributor' => false,
+                'plugin_id' => $_ENV['PLUGIN_ID']
+            ), array(
+                'file' => './' . $file_name
             ));
 
             if (!property_exists($deploy, 'id')) {
