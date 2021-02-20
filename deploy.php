@@ -17,7 +17,7 @@
 	define( 'FS__API_SECRET_KEY', $_ENV['SECRET_KEY'] );
 
 	    
-    print_r(FS__API_PUBLIC_KEY, FS__API_SECRET_KEY, FS__API_DEV_ID, $_ENV['PLUGIN_SLUG']);
+    var_dump(FS__API_PUBLIC_KEY, FS__API_SECRET_KEY, FS__API_DEV_ID, $_ENV['PLUGIN_SLUG']);
 
     echo "\n- Deploy in progress on Freemius\n";
 
