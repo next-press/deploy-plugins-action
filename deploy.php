@@ -21,6 +21,8 @@
     try {
         // Init SDK.
         $api = new Freemius_Api(FS__API_SCOPE, FS__API_DEV_ID, FS__API_PUBLIC_KEY, FS__API_SECRET_KEY, $sandbox);
+	    
+	printr(FS__API_PUBLIC_KEY, FS__API_SECRET_KEY);
 
         if (!is_object($api)) {
             print_r($deploy);
