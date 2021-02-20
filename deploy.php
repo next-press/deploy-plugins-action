@@ -16,21 +16,22 @@
 	define( 'FS__API_PUBLIC_KEY', $_ENV['PUBLIC_KEY'] );
 	define( 'FS__API_SECRET_KEY', $_ENV['SECRET_KEY'] );
 
-	    
     var_dump(FS__API_PUBLIC_KEY, FS__API_SECRET_KEY, FS__API_DEV_ID, $_ENV['PLUGIN_SLUG']);
 
     echo "\n- Deploy in progress on Freemius\n";
 
     try {
         // Init SDK.
-        $api = new Freemius_Api(FS__API_SCOPE, FS__API_DEV_ID, FS__API_PUBLIC_KEY, FS__API_SECRET_KEY, $sandbox);
+        $api = new Freemius_Api(FS__API_SCOPE, FS__API_DEV_ID, FS__API_PUBLIC_KEY, FS__API_SECRET_KEY);
 
+	var_dump($api);
+	    
         if (!is_object($api)) {
             print_r($deploy);
             die();
         }
 
-        $deploy = $api->Api('plugins/'.$_ENV['PLUGIN_SLUG'].'/tags.json', 'GET', array(
+        $deploy = $api->Api('plugins/'.$_ENV['PLUGIN_ID'].'/tags.json', 'GET', array(
             'plugin_id' => $_ENV['PLUGIN_ID']
         ));
         if ( $deploy->tags[0]->version === $version ) {
@@ -38,7 +39,7 @@
                 echo '-Package already deployed on Freemius'."\n";
         } else {
             // Upload the zip
-            $deploy = $api->Api('plugins/'.$_ENV['PLUGIN_SLUG'].'/tags.json', 'POST', array(
+            $deploy = $api->Api('plugins/'.$_ENV['PLUGIN_ID'].'/tags.json', 'POST', array(
                 'add_contributor' => false,
                 'plugin_id' => $_ENV['PLUGIN_ID']
             ), array(
@@ -52,7 +53,7 @@
 
             echo "- Deploy done on Freemius\n";
 
-            $is_released = $api->Api('plugins/'.$_ENV['PLUGIN_SLUG'].'/tags/'.$deploy->id.'.json', 'PUT', array(
+            $is_released = $api->Api('plugins/'.$_ENV['PLUGIN_ID'].'/tags/'.$deploy->id.'.json', 'PUT', array(
                 'release_mode' => $release_mode,
                 'plugin_id' => $_ENV['PLUGIN_ID']
             ), array());
@@ -63,7 +64,7 @@
         echo "- Download Freemius free version\n";
 
         // Generate url to download the zip
-        $zip_free = $api->GetSignedUrl('plugins/'.$_ENV['PLUGIN_SLUG'].'/tags/'.$deploy->id.'.zip?plugin_id='.$_ENV['PLUGIN_ID'], array());
+        $zip_free = $api->GetSignedUrl('plugins/'.$_ENV['PLUGIN_ID'].'/tags/'.$deploy->id.'.zip?plugin_id='.$_ENV['PLUGIN_ID'], array());
         $path = pathinfo($file_name);
         $zipname_free = $path['dirname'] . '/' . basename($file_name, '.zip');
         $zipname_free .= '__free.zip';
@@ -74,7 +75,7 @@
         echo "::set-output name=free_version::" . $zipname_free . "\n";
 
         // Generate url to download the pro zip
-        $zip_pro = $api->GetSignedUrl('plugins/'.$_ENV['PLUGIN_SLUG'].'/tags/'.$deploy->id.'.zip?is_premium=true&plugin_id='.$_ENV['PLUGIN_ID'], array());
+        $zip_pro = $api->GetSignedUrl('plugins/'.$_ENV['PLUGIN_ID'].'/tags/'.$deploy->id.'.zip?is_premium=true&plugin_id='.$_ENV['PLUGIN_ID'], array());
         $path = pathinfo($file_name);
         $zipname_pro = $path['dirname'] . '/' . basename($file_name, '.zip');
         $zipname_pro .= '.zip';
