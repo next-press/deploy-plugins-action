@@ -12,7 +12,7 @@ ARG release_mode
 
 COPY deploy.php /deploy.php
 COPY ${file_name} /${file_name}
-RUN git clone -n https://github.com/Freemius/freemius-php-sdk.git /freemius-php-api && cd /freemius-php-api && git checkout 9ca08b0f3166bac2bb4d640eaee89d63719626f2
+RUN git clone -n https://github.com/Freemius/freemius-php-sdk.git /freemius-php-api && cd /freemius-php-api && git checkout 3e0ee93ab94e1b0028f637a7b83727e2d39198d6
 
 EXPOSE 80/tcp
 EXPOSE 80/udp
