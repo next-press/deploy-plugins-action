@@ -38,16 +38,15 @@
                 $deploy = $deploy->tags[0];
                 echo '-Package already deployed on Freemius'."\n";
         } else {
-            // Upload the zip
-	    $api = new Freemius_Api(FS__API_SCOPE, FS__API_DEV_ID, FS__API_PUBLIC_KEY, FS__API_SECRET_KEY);
-            $deploy = $api->Api('plugins/'.$_ENV['PLUGIN_ID'].'/tags.json', 'POST', array(
-                'add_contributor' => false,
-                'plugin_id' => $_ENV['PLUGIN_ID']
-            ), array(
-                'file' =>  './' . $file_name
-            ));
+            
+            $token = $api->Api('token.json', 'GET');
 
-            if (!property_exists($deploy, 'id')) {
+            $access_token = $token->access;
+
+            // Upload the zip
+            $results = upload_file($access_token, $file_name, $_ENV['PLUGIN_SLUG']);
+
+            if (!property_exists($results, 'id')) {
                 var_dump('error_2', $deploy);
                 die();
             }
@@ -89,3 +88,49 @@
     catch (Exception $e) {
         echo "- Freemius server has problems\n";
     }
+
+
+function upload_file($access_token, $file_name, $slug) {
+
+    // get cURL resource
+    $ch = curl_init();
+
+    // set url
+    curl_setopt($ch, CURLOPT_URL, sprintf('https://fast-api.freemius.com/v1/developers/%d/plugins/%d/tags.json', FS__API_DEV_ID, $_ENV['PLUGIN_ID']));
+
+    // set method
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+
+    // return the transfer as a string
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+    // set headers
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+      "Authorization: FSA 3730:{$access_token}",
+      'Content-Type: multipart/form-data;',
+    ]);
+
+    // multipart body
+    $body = [
+        'add_contributor' => false,
+        'file' => new \CurlFile($file_name, 'application/zip', "{$slug}.zip"),
+    ];
+
+    // set body
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
+
+    // send the request and save response to $response
+    $response = curl_exec($ch);
+
+    // stop if fails
+    if (!$response) {
+        return curl_error($ch);
+    }
+
+    // close curl resource to free up system resources 
+    curl_close($ch);
+
+    return json_decode($response);
+
+}
