@@ -27,7 +27,7 @@
 	var_dump($api);
 	    
         if (!is_object($api)) {
-            print_r($deploy);
+            var_dump('error_1, $deploy);
             die();
         }
 
@@ -47,7 +47,7 @@
             ));
 
             if (!property_exists($deploy, 'id')) {
-                print_r($deploy);
+                var_dump('error_1, $deploy);
                 die();
             }
 
