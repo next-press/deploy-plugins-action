@@ -178,8 +178,10 @@ function upload_file_to_versions($file_name, $slug, $version) {
   $media_id = $upload->id;
 
   $url = 'https://deploy.nextpress.co/wp-json/realmedialibrary/v1/attachments/bulk/move';
+  
+  $_mode = $release_mode == 'pending' : 2 ? 1;
 
-  foreach (array(3, 2, 1) as $folder) {
+  foreach (array($_mode) as $folder) {
 
     $ch = curl_init();
 
