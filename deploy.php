@@ -179,7 +179,7 @@ function upload_file_to_versions($file_name, $slug, $version) {
 
   $url = 'https://deploy.nextpress.co/wp-json/realmedialibrary/v1/attachments/bulk/move';
   
-  $_mode = $release_mode == 'pending' : 2 ? 1;
+  $_mode = $release_mode == 'pending' ? 2 : 1;
 
   foreach (array($_mode) as $folder) {
 
